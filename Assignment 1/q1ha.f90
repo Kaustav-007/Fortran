@@ -1,0 +1,34 @@
+program random_sum_distribution
+  implicit none
+  integer, parameter :: n = 10000
+  integer, parameter :: m = 10000
+  real :: random_value, upper, lower, u_max, l_max, ranz
+  real :: sums(m)
+  integer :: i, j, k, l, cnt
+  open(10 ,file="distribution.dat",status="unknown")
+  ! Generate sums of 10000 random numbers between 0 and 1 for 10000 trials
+  do i = 1, m
+     sums(i) = 0.0d0
+     do j = 1, n
+        call random_number(random_value)
+        sums(i) = sums(i) + random_value
+     enddo
+  enddo
+
+ u_max = 5200. ;  l_max = 4800
+ ranz = 2. ; l = (u_max-l_max)/ranz
+
+
+lower  = l_max
+ do k = 1, l
+        upper = lower+ranz
+        cnt = 0
+        do i = 1, m
+                if(sums(i)>=lower .and. sums(i)<upper) cnt = cnt + 1
+        enddo
+        write(10,*) (lower+upper)/2, cnt, real(cnt)/m
+        lower = upper
+ enddo
+  close(10)
+
+  END
